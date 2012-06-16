@@ -35,7 +35,12 @@ abstract class DraggingPaintAction extends AbstractPaintAction
 		super.finishWithLastPoint();
 	}
 	
-	public RectF getLastAffectedArea() { return lastAffectedArea; }
+	public RectF getLastAffectedArea() 
+	{ 
+		if (lastAffectedArea!=null) return lastAffectedArea;
+		else return new RectF(0,0,0,0);
+	}
+	
 	public boolean usesLocalPoints() { return false; }
 }
 

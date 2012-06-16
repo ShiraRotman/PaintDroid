@@ -164,20 +164,25 @@ public class PaintBoardView extends View
 				setDrawingCacheEnabled(true);
 				Bitmap partialBitmap=getDrawingCache();
 				//.copy(Bitmap.Config.ARGB_8888,false);
-				int numColored=0;
-				int areaWidth=partialBitmap.getWidth()-SCROLLBAR_SIZE;
-				int areaHeight=partialBitmap.getHeight()-SCROLLBAR_SIZE;
+				/*int areaWidth=partialBitmap.getWidth()-SCROLLBAR_SIZE;
+				int areaHeight=partialBitmap.getHeight()-SCROLLBAR_SIZE;*/
+				RectF affectedAreaF=paintAction.getLastAffectedArea();
+				Rect localAffectedArea=convertRectFToInt(affectedAreaF);
+				Rect globalAffectedArea=new Rect(localAffectedArea);
+				if (paintAction.usesLocalPoints())
+					convertLocalGlobalRect(globalAffectedArea,true);
+				else convertLocalGlobalRect(localAffectedArea,false);
+				int areaWidth=localAffectedArea.width();
+				int areaHeight=localAffectedArea.height();
 				int[] pixels=new int[areaWidth*areaHeight];
-				partialBitmap.getPixels(pixels,0,areaWidth,0,0,areaWidth,
-						areaHeight);	
-				numColored=0;
+				partialBitmap.getPixels(pixels,0,areaWidth,localAffectedArea.
+						left,localAffectedArea.top,areaWidth,areaHeight);	
+				int numColored=0;
 				for (int index=0;index<pixels.length;index++)
 					if (pixels[index]==0xFF000000) numColored++;
 				Log.i("PaintDroid","Pixels: " + numColored);
-				/*Log.i("PaintDroid","Bitmap: " + boardBitmap.getWidth() + "," + 
-						boardBitmap.getHeight());*/
-				boardBitmap.setPixels(pixels,0,areaWidth,boardDrawingRect.
-						left,boardDrawingRect.top,areaWidth,areaHeight);
+				boardBitmap.setPixels(pixels,0,areaWidth,globalAffectedArea.
+						left,globalAffectedArea.top,areaWidth,areaHeight);
 				prevAffectedArea=null;
 				//partialBitmap.recycle();
 				//setDrawingCacheEnabled(false);
