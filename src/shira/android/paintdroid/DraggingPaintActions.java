@@ -46,11 +46,8 @@ abstract class DraggingPaintAction extends AbstractPaintAction
 
 class PaintRectangleAction extends DraggingPaintAction
 {
-	public void draw(Canvas canvas) 
-	{ 
-		Paint paint=new Paint(0xFF000000); //Temporary
-		if (lastAffectedArea!=null) canvas.drawRect(lastAffectedArea,paint);
-	}
+	public void draw(Canvas canvas,Paint paint) 
+	{ if (lastAffectedArea!=null) canvas.drawRect(lastAffectedArea,paint); }
 	
 	public boolean isPermanentChange() { return (startPointX==-1); }
 }

@@ -1,8 +1,7 @@
 package shira.android.paintdroid;
 
 import android.app.Activity;
-import android.graphics.Canvas;
-import android.graphics.RectF;
+import android.graphics.*;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +12,7 @@ import android.widget.*;
 public class PaintDroidActivity extends Activity 
 {
 	private PaintBoardView paintBoardView;
+	private Paint drawingPaint;
 	
 	private class ScrollingAction extends AbstractPaintAction
 	{
@@ -26,7 +26,7 @@ public class PaintDroidActivity extends Activity
 			this.maxScrollX=maxScrollX; this.maxScrollY=maxScrollY;
 		}
 		
-		public void draw(Canvas canvas) { }
+		public void draw(Canvas canvas,Paint paint) { }
 		public boolean usesLocalPoints() { return true; }
 		public boolean isPermanentChange() { return false; }
 		public RectF getLastAffectedArea() { return null; }
@@ -63,13 +63,11 @@ public class PaintDroidActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.paint_main);
 		//Paint board view
-		/*paintBoardView=new PaintBoardView(this);
-		LinearLayout.LayoutParams layoutParams=new LinearLayout.LayoutParams(
-				0,ViewGroup.LayoutParams.FILL_PARENT,(float)0.8);
-		paintBoardView.setLayoutParams(layoutParams);
-		ViewGroup boardToolsContainer=(ViewGroup)findViewById(R.id.board_tools_container);
-		boardToolsContainer.addView(paintBoardView);*/
+		int initialColor=Color.BLACK;
+		drawingPaint=new Paint();
+		drawingPaint.setColor(initialColor);
 		paintBoardView=(PaintBoardView)findViewById(R.id.paint_board_view);
+		paintBoardView.setPaint(drawingPaint);
 		//paintBoardView.setDrawingCacheEnabled(true);
 		
 		//Paint actions grid
@@ -95,6 +93,7 @@ public class PaintDroidActivity extends Activity
 		final View currentColorView=findViewById(R.id.current_color_view);
 		final GradientDrawable colorBackground=(GradientDrawable)currentColorView.
 				getBackground();
+		colorBackground.setColor(initialColor);
 		GradientSelectorView colorSelectorView=(GradientSelectorView)
 				findViewById(R.id.color_selector_view);
 		//currentColorView.setOnClickListener(new View.OnClickListener()
@@ -106,6 +105,7 @@ public class PaintDroidActivity extends Activity
 			{ 
 				colorBackground.setColor(color);
 				currentColorView.invalidate();
+				drawingPaint.setColor(color);
 			}
 		});
 	}

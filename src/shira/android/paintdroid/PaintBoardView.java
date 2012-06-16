@@ -16,6 +16,7 @@ public class PaintBoardView extends View
 	private Bitmap boardBitmap;
 	private Rect prevAffectedArea;
 	private PaintAction paintAction;
+	private Paint paint=new Paint();
 	private int prevWidth=0,prevHeight=0;
 	private int pointerID=-1;
 	
@@ -48,6 +49,16 @@ public class PaintBoardView extends View
 	
 	public void setPaintAction(PaintAction paintAction)
 	{ this.paintAction=paintAction; }
+	
+	public Paint getPaint() { return paint; }
+	
+	public void setPaint(Paint paint)
+	{
+		if (paint==null)
+			throw new IllegalArgumentException("The paint to use for drawing " +
+					"must be non-null!");
+		this.paint=paint;
+	}
 	
 	@Override public int computeHorizontalScrollRange() 
 	{ return (int)(500*DENSITY_FACTOR); }
@@ -158,7 +169,7 @@ public class PaintBoardView extends View
 		if (paintAction!=null)
 		{
 			//setDrawingCacheEnabled(true);
-			paintAction.draw(canvas);
+			paintAction.draw(canvas,paint);
 			if (paintAction.isPermanentChange())
 			{
 				setDrawingCacheEnabled(true);

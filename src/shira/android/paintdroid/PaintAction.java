@@ -2,6 +2,7 @@ package shira.android.paintdroid;
 
 //import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.RectF;
 
 //enum PointType { CONTINUAL,INTERMEDIATE,FINAL };
@@ -16,7 +17,7 @@ interface PaintAction
 	public abstract boolean supportsCancel();
 	public abstract void cancelAction();
 	public abstract void finishWithLastPoint();
-	public abstract void draw(Canvas canvas);
+	public abstract void draw(Canvas canvas,Paint paint);
 }
 
 abstract class AbstractPaintAction implements PaintAction
@@ -61,5 +62,5 @@ class DummyPaintAction implements PaintAction
 	public boolean supportsCancel() { return false; }
 	public void cancelAction() { }
 	public void finishWithLastPoint() { }
-	public void draw(Canvas canvas) { }
+	public void draw(Canvas canvas,Paint paint) { }
 }
