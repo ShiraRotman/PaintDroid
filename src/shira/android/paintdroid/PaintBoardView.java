@@ -123,9 +123,10 @@ public class PaintBoardView extends View
 			RectF affectedAreaF=paintAction.getLastAffectedArea();
 			if (affectedAreaF!=null)
 			{
-				affectedArea=convertRectFToInt(affectedAreaF);
-				if (!paintAction.usesLocalPoints()) 
-					convertLocalGlobalRect(affectedArea,false);
+				affectedArea=new Rect();
+				affectedAreaF.round(affectedArea);
+				if (paintAction.usesLocalPoints()) 
+					convertLocalGlobalRect(affectedArea,true);
 				if (prevAffectedArea!=null) affectedArea.union(prevAffectedArea);
 			}
 			else if (prevAffectedArea!=null) 
@@ -133,8 +134,9 @@ public class PaintBoardView extends View
 			if (affectedArea!=null)
 			{
 				setDrawingCacheEnabled(false);
-				invalidate();
+				invalidate(affectedArea);
 			}
+			prevAffectedArea=affectedArea;
 			return true;
 		} //end if paintAction!=null
 		else return false;
@@ -176,7 +178,8 @@ public class PaintBoardView extends View
 				Bitmap partialBitmap=getDrawingCache();
 				//.copy(Bitmap.Config.ARGB_8888,false);
 				RectF affectedAreaF=paintAction.getLastAffectedArea();
-				Rect localAffectedArea=convertRectFToInt(affectedAreaF);
+				Rect localAffectedArea=new Rect();
+				affectedAreaF.round(localAffectedArea);
 				Rect globalAffectedArea=new Rect(localAffectedArea);
 				if (paintAction.usesLocalPoints())
 					convertLocalGlobalRect(globalAffectedArea,true);
@@ -215,12 +218,6 @@ public class PaintBoardView extends View
 		if (!paintAction.usesLocalPoints())
 		{ coordinateX+=getScrollX(); coordinateY+=getScrollY(); }
 		return new PointF(coordinateX,coordinateY);
-	}
-	
-	private static Rect convertRectFToInt(RectF rectangleF)
-	{
-		return new Rect((int)rectangleF.left,(int)rectangleF.top,(int)
-				rectangleF.right,(int)rectangleF.bottom);
 	}
 	
 	private Rect convertLocalGlobalRect(Rect rectangle,boolean toGlobal)
