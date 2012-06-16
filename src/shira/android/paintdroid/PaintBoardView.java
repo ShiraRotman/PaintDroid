@@ -1,13 +1,12 @@
 package shira.android.paintdroid;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.*;
 import android.util.AttributeSet;
 import android.util.Log;
-//import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 
 public class PaintBoardView extends View 
 {
@@ -34,18 +33,9 @@ public class PaintBoardView extends View
 	
 	private void initialize(Context context)
 	{
-		setBackgroundResource(android.R.color.white);
-		setScrollBarStyle(SCROLLBARS_OUTSIDE_INSET);
-		setHorizontalScrollBarEnabled(true);
-		setVerticalScrollBarEnabled(true);
-		TypedArray styledAttributes=context.obtainStyledAttributes(
-				R.styleable.View);
-		initializeScrollbars(styledAttributes);
-		styledAttributes.recycle();
+		setBackgroundColor(Color.WHITE);
 		DENSITY_FACTOR=context.getResources().getDisplayMetrics().density;
-		SCROLLBAR_SIZE=(int)(Math.ceil(5*DENSITY_FACTOR));
-		Log.i("PaintDroid","Scroll bar: " + SCROLLBAR_SIZE);
-		//setDrawingCacheEnabled(true);
+		SCROLLBAR_SIZE=ViewConfiguration.get(context).getScaledScrollBarSize();
 	}
 	
 	@Override protected void finalize() throws Throwable
