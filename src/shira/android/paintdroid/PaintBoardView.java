@@ -158,26 +158,13 @@ public class PaintBoardView extends View
 			boardBitmap=Bitmap.createBitmap(boardWidth,boardHeight,Bitmap.
 					Config.ARGB_8888);
 		}
-		/*if (prevAffectedArea!=null) //canvas.restore();
-			canvas.drawBitmap(prevStateBitmap,null,prevAffectedArea,null);*/
-		/*if (prevStateBitmap!=null)
-		{*/
 		Rect boardDrawingRect=new Rect();
 		getDrawingRect(boardDrawingRect);
 		boardDrawingRect.right-=SCROLLBAR_SIZE; 
 		boardDrawingRect.bottom-=SCROLLBAR_SIZE;
 		Log.i("PaintDroid","Drawing: " + boardDrawingRect.left + "," + 
 				boardDrawingRect.top);
-		/*Bitmap partialBitmap=Bitmap.createBitmap(boardDrawingRect.width(),
-				boardDrawingRect.height(),Bitmap.Config.ARGB_8888);
-		partialBitmap.setDensity(getContext().getResources().getDisplayMetrics().
-				densityDpi);*/
-		//canvas.setBitmap(partialBitmap);
-		/*canvas.save();
-		canvas.translate(getScrollX(),getScrollY());*/
 		canvas.drawBitmap(boardBitmap,boardDrawingRect,boardDrawingRect,null);
-		//canvas.restore();
-		//}
 		if (paintAction!=null)
 		{
 			//setDrawingCacheEnabled(true);
@@ -188,15 +175,6 @@ public class PaintBoardView extends View
 				Bitmap partialBitmap=getDrawingCache();
 				//.copy(Bitmap.Config.ARGB_8888,false);
 				int numColored=0;
-				/*for (int index1=0;index1<partialBitmap.getWidth();index1++)
-				{
-					for (int index2=0;index2<partialBitmap.getHeight();index2++)
-					{
-						if (partialBitmap.getPixel(index1,index2)==0xFF000000) 
-							numColored++;
-					}
-				}
-				Log.i("PaintDroid","Bitmap pixels: " + numColored);*/
 				int areaWidth=partialBitmap.getWidth()-SCROLLBAR_SIZE;
 				int areaHeight=partialBitmap.getHeight()-SCROLLBAR_SIZE;
 				int[] pixels=new int[areaWidth*areaHeight];
@@ -215,7 +193,6 @@ public class PaintBoardView extends View
 				//setDrawingCacheEnabled(false);
 			}
 			//setDrawingCacheEnabled(false);
-			//else //canvas.saveLayer(null,null,Canvas.ALL_SAVE_FLAG);
 		} //end if paintAction!=null
 	}
 	

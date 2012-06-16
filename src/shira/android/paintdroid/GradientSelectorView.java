@@ -82,7 +82,6 @@ public class GradientSelectorView extends View
 		gradient=new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT,
 				gradientColors);
 		setBackgroundDrawable(gradient);
-		setDrawingCacheEnabled(true);
 	}
 	
 	@Override protected void finalize() throws Throwable
@@ -103,8 +102,9 @@ public class GradientSelectorView extends View
 	
 	@Override protected void onDraw(Canvas canvas)
 	{
-		if (gradientBitmap!=null) gradientBitmap.recycle();
 		super.onDraw(canvas);
-		gradientBitmap=getDrawingCache();
+		if (gradientBitmap!=null) gradientBitmap.recycle();
+		setDrawingCacheEnabled(true);
+		gradientBitmap=Bitmap.createBitmap(getDrawingCache());
 	}
 }
