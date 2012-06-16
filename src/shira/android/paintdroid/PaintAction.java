@@ -22,9 +22,29 @@ interface PaintAction
 
 abstract class AbstractPaintAction implements PaintAction
 {
-	protected float lastPointX=-1,lastPointY=-1;
+	protected RectF lastAffectedArea;
 	
 	protected AbstractPaintAction() { }
+	
+	public RectF getLastAffectedArea() 
+	{ 
+		if (lastAffectedArea!=null) return lastAffectedArea;
+		else return new RectF(0,0,0,0);
+	}
+	
+	public boolean actsOnIntermediatePoints() { return false; }
+	public boolean supportsCancel() { return false; }
+	
+	public void cancelAction()
+	{ 
+		throw new UnsupportedOperationException("Cancel not supported for " + 
+				"this action!");
+	}
+}
+
+abstract class DifferencePaintAction extends AbstractPaintAction
+{
+	protected float lastPointX=-1,lastPointY=-1;
 	
 	public void actOnPoint(float pointX,float pointY,boolean isFinalPoint)
 	{
@@ -32,15 +52,7 @@ abstract class AbstractPaintAction implements PaintAction
 		else { lastPointX=pointX; lastPointY=pointY; }
 	}
 	
-	public boolean actsOnIntermediatePoints() { return false; }
-	public boolean supportsCancel() { return false; }
 	public void finishWithLastPoint() { lastPointX=-1; lastPointY=-1; }
-	
-	public void cancelAction()
-	{ 
-		throw new UnsupportedOperationException("Cancel not supported for " + 
-				"this action!");
-	}
 }
 
 class DummyPaintAction implements PaintAction

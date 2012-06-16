@@ -5,12 +5,11 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.Log;
 
-abstract class DraggingPaintAction extends AbstractPaintAction
+abstract class DraggingPaintAction extends DifferencePaintAction
 {
 	protected float startPointX=-1,startPointY=-1;
-	protected RectF lastAffectedArea;
 	
-	public DraggingPaintAction() { }
+	protected DraggingPaintAction() { }
 	
 	@Override 
 	public void actOnPoint(float pointX,float pointY,boolean isFinalPoint)
@@ -33,12 +32,6 @@ abstract class DraggingPaintAction extends AbstractPaintAction
 		lastAffectedArea.sort();
 		startPointX=-1; startPointY=-1;
 		super.finishWithLastPoint();
-	}
-	
-	public RectF getLastAffectedArea() 
-	{ 
-		if (lastAffectedArea!=null) return lastAffectedArea;
-		else return new RectF(0,0,0,0);
 	}
 	
 	public boolean isPermanentChange() { return (startPointX==-1); }

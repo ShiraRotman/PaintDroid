@@ -14,7 +14,7 @@ public class PaintDroidActivity extends Activity
 	private PaintBoardView paintBoardView;
 	private Paint drawingPaint;
 	
-	private class ScrollingAction extends AbstractPaintAction
+	private class ScrollingAction extends DifferencePaintAction
 	{
 		private int maxScrollX,maxScrollY;
 		
@@ -77,6 +77,7 @@ public class PaintDroidActivity extends Activity
 		DummyPaintAction dummyAction=DummyPaintAction.getInstance();
 		for (int counter=1;counter<paintActions.length;counter++)
 			paintActions[counter]=dummyAction;
+		paintActions[2]=new FreeFormPaintAction();
 		paintActions[5]=new PaintRectangleAction();
 		paintActions[6]=new PaintEllipseAction();
 		GridView paintActionsGrid=(GridView)findViewById(R.id.paint_actions_grid);

@@ -96,6 +96,8 @@ public class PaintBoardView extends View
 									positionY);
 							positionX=adaptedPosition.x; 
 							positionY=adaptedPosition.y;
+							/*Log.i("PaintDroid","History: " + positionX + "," + 
+									positionY);*/
 							paintAction.actOnPoint(positionX,positionY,false);
 						}
 					}
@@ -163,8 +165,6 @@ public class PaintBoardView extends View
 		getDrawingRect(boardDrawingRect);
 		boardDrawingRect.right-=SCROLLBAR_SIZE; 
 		boardDrawingRect.bottom-=SCROLLBAR_SIZE;
-		Log.i("PaintDroid","Drawing: " + boardDrawingRect.left + "," + 
-				boardDrawingRect.top);
 		canvas.drawBitmap(boardBitmap,boardDrawingRect,boardDrawingRect,null);
 		if (paintAction!=null)
 		{
@@ -175,23 +175,26 @@ public class PaintBoardView extends View
 				setDrawingCacheEnabled(true);
 				Bitmap partialBitmap=getDrawingCache();
 				//.copy(Bitmap.Config.ARGB_8888,false);
-				/*int areaWidth=partialBitmap.getWidth()-SCROLLBAR_SIZE;
-				int areaHeight=partialBitmap.getHeight()-SCROLLBAR_SIZE;*/
 				RectF affectedAreaF=paintAction.getLastAffectedArea();
 				Rect localAffectedArea=convertRectFToInt(affectedAreaF);
 				Rect globalAffectedArea=new Rect(localAffectedArea);
 				if (paintAction.usesLocalPoints())
 					convertLocalGlobalRect(globalAffectedArea,true);
 				else convertLocalGlobalRect(localAffectedArea,false);
+				//Log.i("PaintDroid","Local: " + localAffectedArea);
 				int areaWidth=localAffectedArea.width();
 				int areaHeight=localAffectedArea.height();
+				/*int areaWidth=partialBitmap.getWidth()-SCROLLBAR_SIZE;
+				int areaHeight=partialBitmap.getHeight()-SCROLLBAR_SIZE;*/
 				int[] pixels=new int[areaWidth*areaHeight];
 				partialBitmap.getPixels(pixels,0,areaWidth,localAffectedArea.
-						left,localAffectedArea.top,areaWidth,areaHeight);	
-				int numColored=0;
+						left,localAffectedArea.top,areaWidth,areaHeight);
+				/*partialBitmap.getPixels(pixels,0,areaWidth,0,0,areaWidth,
+						areaHeight);*/
+				/*int numColored=0;
 				for (int index=0;index<pixels.length;index++)
-					if (pixels[index]==0xFF000000) numColored++;
-				Log.i("PaintDroid","Pixels: " + numColored);
+					if (pixels[index]!=Color.WHITE) numColored++;
+				Log.i("PaintDroid","Pixels: " + numColored);*/
 				boardBitmap.setPixels(pixels,0,areaWidth,globalAffectedArea.
 						left,globalAffectedArea.top,areaWidth,areaHeight);
 				prevAffectedArea=null;
