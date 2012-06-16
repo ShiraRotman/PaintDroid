@@ -78,6 +78,7 @@ public class PaintDroidActivity extends Activity
 		for (int counter=1;counter<paintActions.length;counter++)
 			paintActions[counter]=dummyAction;
 		paintActions[5]=new PaintRectangleAction();
+		paintActions[6]=new PaintEllipseAction();
 		GridView paintActionsGrid=(GridView)findViewById(R.id.paint_actions_grid);
 		PaintActionsAdapter actionsAdapter=new PaintActionsAdapter(this,
 				new OnListItemClickListener()

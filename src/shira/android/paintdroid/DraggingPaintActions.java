@@ -41,6 +41,7 @@ abstract class DraggingPaintAction extends AbstractPaintAction
 		else return new RectF(0,0,0,0);
 	}
 	
+	public boolean isPermanentChange() { return (startPointX==-1); }
 	public boolean usesLocalPoints() { return false; }
 }
 
@@ -48,6 +49,10 @@ class PaintRectangleAction extends DraggingPaintAction
 {
 	public void draw(Canvas canvas,Paint paint) 
 	{ if (lastAffectedArea!=null) canvas.drawRect(lastAffectedArea,paint); }
-	
-	public boolean isPermanentChange() { return (startPointX==-1); }
+}
+
+class PaintEllipseAction extends DraggingPaintAction
+{
+	public void draw(Canvas canvas,Paint paint) 
+	{ if (lastAffectedArea!=null) canvas.drawOval(lastAffectedArea,paint); }
 }
