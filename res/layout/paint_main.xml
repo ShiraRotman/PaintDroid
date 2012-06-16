@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:orientation="vertical">
+	<!-- <LinearLayout > -->
+	<LinearLayout android:id="@+id/board_tools_container" android:layout_width="fill_parent" 
+	    android:layout_height="0dip" android:orientation="horizontal" android:layout_weight="0.9">
+	    <!-- <LinearLayout -->
+    	<GridView android:id="@+id/paint_actions_grid" android:layout_width="0dip"
+    		android:layout_height="fill_parent" android:numColumns="2" 
+    		android:layout_weight="0.2" android:background="@color/ui_background_color"
+    		android:listSelector="@android:color/transparent"/>
+    	<!--  -->
+    	<!-- Paint Board View -->
+    	<view class="shira.android.paintdroid.PaintBoardView" android:id="@+id/paint_board_view"
+    	    android:layout_width="0dip" android:layout_height="fill_parent" 
+    	    android:layout_weight="0.8" android:scrollbarSize="5dip"/>
+    </LinearLayout>
+    <LinearLayout android:layout_width="fill_parent" android:layout_height="0dip" 
+        android:layout_weight="0.1" android:orientation="horizontal" android:paddingTop="3dip" 
+        android:paddingBottom="3dip" android:paddingLeft="5dip" android:paddingRight="5dip" 
+        android:background="@color/ui_background_color" android:id="@+id/color_section">
+    	<View android:id="@+id/current_color_view" android:layout_width="0dip" 
+    	    android:layout_height="fill_parent" android:layout_weight="0.1" 
+    	    android:background="@drawable/color_view_background"/>
+    	<view class="shira.android.paintdroid.GradientSelectorView" 
+    	    android:id="@+id/color_selector_view" android:layout_width="0dip"
+    	    android:layout_height="fill_parent" android:layout_weight="0.75"
+    	    android:layout_marginLeft="7dip"/>
+    	
+	</LinearLayout>
+</LinearLayout>

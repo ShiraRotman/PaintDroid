@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- <inset xmlns:android="http://schemas.android.com/apk/res/android" android:insetLeft="1dip"
+    android:insetTop="1dip" android:insetRight="1dip" android:insetBottom="1dip" 
+    android:drawable="@drawable/actions_selector_color"/> -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="@android:color/transparent"/>
+    <stroke android:color="@android:color/black" android:width="1dip"/>
+</shape> 

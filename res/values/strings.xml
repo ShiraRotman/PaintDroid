@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">PaintDroid</string>
+	<string name="pencil_content">Draws a free-form line</string>
+	<string name="eraser_content">Erases a portion of the picture</string>
+	<string name="line_content">Draws a straight line</string>
+	<string name="rectangle_content">Draws a rectangle</string>
+	<string name="ellipse_content">Draws an ellipse</string>
+	<string name="polygon_content">Draws a polygon</string>
+</resources>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="actions_images">
+        <item>@drawable/scrolling</item>
+        <item>@drawable/text</item>
+        <item>@drawable/pencil</item>
+        <item>@drawable/eraser</item>
+        <item>@drawable/line</item>
+        <item>@drawable/rectangle</item>
+        <item>@drawable/ellipse</item>
+        <item>@drawable/polygon</item>
+    </string-array>
+    
+	<!-- <integer-array name="paint_colors">
+	    <item>0x000000</item>
+	    <item>0x808080</item>
+	    <item>0x800000</item>
+	    <item>0x008000</item>
+	    <item>0x000080</item>
+	    <item>0xFFFFFF</item>
+	    <item>0xC0C0C0</item>
+	    <item>0xFF0000</item>
+	    <item>0x00FF00</item>
+	    <item>0x0000FF</item>
+	</integer-array> -->    
+</resources>
