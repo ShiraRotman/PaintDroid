@@ -86,7 +86,8 @@ public class PaintBoardView extends View
 				else pointerIndex=event.findPointerIndex(pointerID);
 				if (pointerIndex>-1)
 				{
-					if (paintAction.actsOnIntermediatePoints())
+					if (paintAction.getPointsSensitivityLevel()!=
+							PointSensitivityLevel.CURRENT)
 					{
 						int historySize=event.getHistorySize();
 						for (int historyPoint=0;historyPoint<historySize;
@@ -217,7 +218,8 @@ public class PaintBoardView extends View
 	
 	private void handleContinualPoints(float pointX,float pointY)
 	{
-		if (paintAction.requiresContinualPoints())
+		if (paintAction.getPointsSensitivityLevel()==PointSensitivityLevel.
+				INTERMEDIATE)
 		{
 			if (lastPointX>-1)
 			{

@@ -6,12 +6,12 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 
 //enum PointType { CONTINUAL,INTERMEDIATE,FINAL };
+enum PointSensitivityLevel { CURRENT,HISTORICAL,INTERMEDIATE }
 
 interface PaintAction 
 {
 	public abstract void actOnPoint(float pointX,float pointY,boolean isFinalPoint);
-	public abstract boolean actsOnIntermediatePoints();
-	public abstract boolean requiresContinualPoints();
+	public abstract PointSensitivityLevel getPointsSensitivityLevel();
 	public abstract boolean usesLocalPoints();
 	public abstract boolean isPermanentChange();
 	public abstract RectF getLastAffectedArea();
@@ -33,8 +33,9 @@ abstract class AbstractPaintAction implements PaintAction
 		else return new RectF(0,0,0,0);
 	}
 	
-	public boolean actsOnIntermediatePoints() { return false; }
-	public boolean requiresContinualPoints() { return false; }
+	public PointSensitivityLevel getPointsSensitivityLevel() 
+	{ return PointSensitivityLevel.CURRENT; }
+	
 	public boolean supportsCancel() { return false; }
 	
 	public void cancelAction()
@@ -69,8 +70,8 @@ class DummyPaintAction implements PaintAction
 	}
 	
 	public void actOnPoint(float pointX,float pointY,boolean isFinalPoint) { }
-	public boolean actsOnIntermediatePoints() { return false; }
-	public boolean requiresContinualPoints() { return false; }
+	public PointSensitivityLevel getPointsSensitivityLevel() 
+	{ return PointSensitivityLevel.CURRENT; }
 	public boolean usesLocalPoints() { return false; }
 	public boolean isPermanentChange() { return false; }
 	public RectF getLastAffectedArea() { return null; }
