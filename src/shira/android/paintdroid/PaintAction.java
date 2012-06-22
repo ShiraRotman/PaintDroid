@@ -11,6 +11,7 @@ interface PaintAction
 {
 	public abstract void actOnPoint(float pointX,float pointY,boolean isFinalPoint);
 	public abstract boolean actsOnIntermediatePoints();
+	public abstract boolean requiresContinualPoints();
 	public abstract boolean usesLocalPoints();
 	public abstract boolean isPermanentChange();
 	public abstract RectF getLastAffectedArea();
@@ -33,6 +34,7 @@ abstract class AbstractPaintAction implements PaintAction
 	}
 	
 	public boolean actsOnIntermediatePoints() { return false; }
+	public boolean requiresContinualPoints() { return false; }
 	public boolean supportsCancel() { return false; }
 	
 	public void cancelAction()
@@ -68,6 +70,7 @@ class DummyPaintAction implements PaintAction
 	
 	public void actOnPoint(float pointX,float pointY,boolean isFinalPoint) { }
 	public boolean actsOnIntermediatePoints() { return false; }
+	public boolean requiresContinualPoints() { return false; }
 	public boolean usesLocalPoints() { return false; }
 	public boolean isPermanentChange() { return false; }
 	public RectF getLastAffectedArea() { return null; }

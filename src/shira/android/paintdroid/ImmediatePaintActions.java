@@ -38,6 +38,7 @@ abstract class ImmediatePaintAction extends AbstractPaintAction
 	
 	@Override public void finishWithLastPoint() { isFinalPoint=true; } 
 	@Override public boolean actsOnIntermediatePoints() { return true; }
+	@Override public boolean requiresContinualPoints() { return true; }
 	public boolean isPermanentChange() { return isFinalPoint; }
 	public boolean usesLocalPoints() { return false; }
 	

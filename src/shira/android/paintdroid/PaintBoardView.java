@@ -17,6 +17,7 @@ public class PaintBoardView extends View
 	private Rect prevAffectedArea;
 	private PaintAction paintAction;
 	private Paint paint=new Paint();
+	private float lastPointX=-1,lastPointY=-1;
 	private int prevWidth=0,prevHeight=0;
 	private int pointerID=-1;
 	
@@ -48,7 +49,10 @@ public class PaintBoardView extends View
 	public PaintAction getPaintAction() { return paintAction; }
 	
 	public void setPaintAction(PaintAction paintAction)
-	{ this.paintAction=paintAction; }
+	{ 
+		this.paintAction=paintAction;
+		lastPointX=-1; lastPointY=-1;
+	}
 	
 	public Paint getPaint() { return paint; }
 	
@@ -96,6 +100,7 @@ public class PaintBoardView extends View
 									positionY);
 							positionX=adaptedPosition.x; 
 							positionY=adaptedPosition.y;
+							handleContinualPoints(positionX,positionY);	
 							/*Log.i("PaintDroid","History: " + positionX + "," + 
 									positionY);*/
 							paintAction.actOnPoint(positionX,positionY,false);
@@ -105,8 +110,10 @@ public class PaintBoardView extends View
 					float positionY=event.getY(pointerIndex);
 					PointF adaptedPosition=adaptCoordinates(positionX,positionY);
 					positionX=adaptedPosition.x; positionY=adaptedPosition.y;
-					paintAction.actOnPoint(positionX,positionY,(actionMask==
-							MotionEvent.ACTION_UP));
+					handleContinualPoints(positionX,positionY);
+					boolean isFinalPoint=(actionMask==MotionEvent.ACTION_UP);
+					paintAction.actOnPoint(positionX,positionY,isFinalPoint);
+					if (isFinalPoint) { lastPointX=-1; lastPointY=-1; }
 				} //end if pointerIndex>-1
 				if (actionMask==MotionEvent.ACTION_UP)
 				{
@@ -206,6 +213,24 @@ public class PaintBoardView extends View
 			}
 			//setDrawingCacheEnabled(false);
 		} //end if paintAction!=null
+	}
+	
+	private void handleContinualPoints(float pointX,float pointY)
+	{
+		if (paintAction.requiresContinualPoints())
+		{
+			if (lastPointX>-1)
+			{
+				float[] continualPoints=PaintUtils.calcIntermediatePoints(
+						lastPointX,lastPointY,pointX,pointY);
+				for (int index=0;index<continualPoints.length;index+=2)
+				{
+					paintAction.actOnPoint(continualPoints[index],
+							continualPoints[index+1],false);
+				}
+			}
+			lastPointX=pointX; lastPointY=pointY;
+		}
 	}
 	
 	private PointF adaptCoordinates(float coordinateX,float coordinateY)
