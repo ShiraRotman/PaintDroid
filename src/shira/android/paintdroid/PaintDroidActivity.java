@@ -63,11 +63,12 @@ public class PaintDroidActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.paint_main);
 		//Paint board view
-		int initialColor=Color.BLACK;
+		int initialPaintColor=Color.BLACK,backgroundColor=Color.WHITE;
 		drawingPaint=new Paint();
-		drawingPaint.setColor(initialColor);
+		drawingPaint.setColor(initialPaintColor);
 		paintBoardView=(PaintBoardView)findViewById(R.id.paint_board_view);
 		paintBoardView.setPaint(drawingPaint);
+		paintBoardView.setBackgroundColor(backgroundColor);
 		//paintBoardView.setDrawingCacheEnabled(true);
 		
 		//Paint actions grid
@@ -78,6 +79,7 @@ public class PaintDroidActivity extends Activity
 		for (int counter=1;counter<paintActions.length;counter++)
 			paintActions[counter]=dummyAction;
 		paintActions[2]=new FreeFormPaintAction();
+		paintActions[3]=new EraserPaintAction(backgroundColor);
 		paintActions[5]=new PaintRectangleAction();
 		paintActions[6]=new PaintEllipseAction();
 		GridView paintActionsGrid=(GridView)findViewById(R.id.paint_actions_grid);
@@ -95,7 +97,7 @@ public class PaintDroidActivity extends Activity
 		final View currentColorView=findViewById(R.id.current_color_view);
 		final GradientDrawable colorBackground=(GradientDrawable)currentColorView.
 				getBackground();
-		colorBackground.setColor(initialColor);
+		colorBackground.setColor(initialPaintColor);
 		GradientSelectorView colorSelectorView=(GradientSelectorView)
 				findViewById(R.id.color_selector_view);
 		//currentColorView.setOnClickListener(new View.OnClickListener()

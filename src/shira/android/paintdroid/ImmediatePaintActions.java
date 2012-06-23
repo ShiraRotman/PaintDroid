@@ -1,6 +1,7 @@
 package shira.android.paintdroid;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 //import android.util.Log;
@@ -47,7 +48,7 @@ abstract class ImmediatePaintAction extends AbstractPaintAction
 
 class FreeFormPaintAction extends ImmediatePaintAction
 {
-	@Override public void draw(Canvas canvas,Paint paint)
+	public void draw(Canvas canvas,Paint paint)
 	{
 		float[] affectedPointsArray=new float[affectedPoints.size()];
 		int index=0;
@@ -59,5 +60,28 @@ class FreeFormPaintAction extends ImmediatePaintAction
 		paint.setStrokeWidth(strokeWidth);
 		//if (isFinalPoint) affectedPoints.clear();
 		//super.draw(canvas,paint);
+	}
+}
+
+class EraserPaintAction extends FreeFormPaintAction
+{
+	private int backgroundColor;
+	
+	public EraserPaintAction() { this(Color.WHITE); }
+	
+	public EraserPaintAction(int backgroundColor)
+	{ setBackgroundColor(backgroundColor); }
+
+	public int getBackgroundColor() { return backgroundColor; }
+
+	public void setBackgroundColor(int backgroundColor) 
+	{ this.backgroundColor=backgroundColor; }
+	
+	@Override public void draw(Canvas canvas,Paint paint)
+	{
+		int origBackgroundColor=paint.getColor();
+		paint.setColor(backgroundColor);
+		super.draw(canvas,paint);
+		paint.setColor(origBackgroundColor);
 	}
 }
