@@ -18,8 +18,7 @@ abstract class ImmediatePaintAction extends AbstractPaintAction
 	@Override 
 	public void actOnPoint(float pointX,float pointY,boolean isFinalPoint)
 	{
-		//if (affectedPoints.size()==0)
-		if (this.isFinalPoint)
+		if ((affectedPoints.size()==0)||(this.isFinalPoint))
 		{
 			affectedPoints.clear();
 			lastAffectedArea=new RectF(pointX,pointY,pointX,pointY);
