@@ -48,14 +48,12 @@ abstract class AbstractPaintAction implements PaintAction
 abstract class DifferencePaintAction extends AbstractPaintAction
 {
 	protected float lastPointX=-1,lastPointY=-1;
+	protected boolean isFinalPoint;
 	
 	public void actOnPoint(float pointX,float pointY,boolean isFinalPoint)
-	{
-		if (isFinalPoint) { lastPointX=-1; lastPointY=-1; }
-		else { lastPointX=pointX; lastPointY=pointY; }
-	}
+	{ lastPointX=pointX; lastPointY=pointY; this.isFinalPoint=isFinalPoint; }
 	
-	public void finishWithLastPoint() { lastPointX=-1; lastPointY=-1; }
+	//public void finishWithLastPoint() { lastPointX=-1; lastPointY=-1; }
 }
 
 class DummyPaintAction implements PaintAction

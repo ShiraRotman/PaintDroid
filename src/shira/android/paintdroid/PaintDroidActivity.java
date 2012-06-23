@@ -32,11 +32,12 @@ public class PaintDroidActivity extends Activity
 		public boolean usesLocalPoints() { return true; }
 		public boolean isPermanentChange() { return false; }
 		public RectF getLastAffectedArea() { return null; }
+		public void finishWithLastPoint() { }
 		
 		@Override 
 		public void actOnPoint(float pointX,float pointY,boolean isFinalPoint)
 		{
-			if ((lastPointX>-1)&&(lastPointY>-1))
+			if (!this.isFinalPoint)
 			{
 				//Log.i("Last",lastPointX + "," + lastPointY);
 				int differenceX=(int)(pointX-lastPointX);
@@ -81,6 +82,7 @@ public class PaintDroidActivity extends Activity
 		
 		paintActions[2]=new FreeFormPaintAction();
 		paintActions[3]=new EraserPaintAction(backgroundColor);
+		paintActions[6]=new PaintLineAction();
 		paintActions[7]=new PaintRectangleAction();
 		paintActions[8]=new PaintEllipseAction();
 		
