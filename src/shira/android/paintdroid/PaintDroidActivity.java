@@ -37,7 +37,7 @@ public class PaintDroidActivity extends Activity
 		@Override 
 		public void actOnPoint(float pointX,float pointY,boolean isFinalPoint)
 		{
-			if (!this.isFinalPoint)
+			if ((lastPointX>-1)&&(!this.isFinalPoint))
 			{
 				//Log.i("Last",lastPointX + "," + lastPointY);
 				int differenceX=(int)(pointX-lastPointX);
@@ -101,7 +101,11 @@ public class PaintDroidActivity extends Activity
 				new OnListItemClickListener()
 		{
 			public void onListItemClick(View view,int position)
-			{ paintBoardView.setPaintAction(paintActions[position]); }
+			{
+				PaintAction paintAction=paintActions[position];
+				paintAction.resetState();
+				paintBoardView.setPaintAction(paintAction); 
+			}
 		});
 		paintActionsGrid.setAdapter(actionsAdapter);
 		actionsAdapter.setSelectedListItem(0);

@@ -34,6 +34,12 @@ abstract class DraggingPaintAction extends DifferencePaintAction
 		//super.finishWithLastPoint();
 	}
 	
+	@Override public void resetState()
+	{
+		super.resetState();
+		startPointX=-1; startPointY=-1;
+	}
+	
 	public boolean isPermanentChange() { return isFinalPoint; }
 	public boolean usesLocalPoints() { return false; }
 }

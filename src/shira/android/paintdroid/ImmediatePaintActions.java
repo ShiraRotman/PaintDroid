@@ -37,6 +37,14 @@ abstract class ImmediatePaintAction extends AbstractPaintAction
 		this.isFinalPoint=isFinalPoint;
 	}
 	
+	@Override public void resetState() 
+	{
+		super.resetState();
+		affectedPoints.clear();
+		lastAffectedArea=new RectF();
+		isFinalPoint=false;
+	}
+	
 	@Override public void finishWithLastPoint() { isFinalPoint=true; } 
 	public PointSensitivityLevel getPointsSensitivityLevel() 
 	{ return PointSensitivityLevel.INTERMEDIATE; }

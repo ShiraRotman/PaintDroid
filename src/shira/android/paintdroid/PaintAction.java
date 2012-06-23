@@ -18,6 +18,7 @@ interface PaintAction
 	public abstract boolean supportsCancel();
 	public abstract void cancelAction();
 	public abstract void finishWithLastPoint();
+	public abstract void resetState();
 	public abstract void draw(Canvas canvas,Paint paint);
 }
 
@@ -35,6 +36,8 @@ abstract class AbstractPaintAction implements PaintAction
 	
 	public PointSensitivityLevel getPointsSensitivityLevel() 
 	{ return PointSensitivityLevel.CURRENT; }
+	
+	public void resetState() { lastAffectedArea=null; }
 	
 	public boolean supportsCancel() { return false; }
 	
@@ -54,6 +57,12 @@ abstract class DifferencePaintAction extends AbstractPaintAction
 	{ lastPointX=pointX; lastPointY=pointY; this.isFinalPoint=isFinalPoint; }
 	
 	//public void finishWithLastPoint() { lastPointX=-1; lastPointY=-1; }
+	
+	@Override public void resetState() 
+	{
+		super.resetState();
+		lastPointX=-1; lastPointY=-1; isFinalPoint=false; 
+	}
 }
 
 class DummyPaintAction implements PaintAction
@@ -76,5 +85,6 @@ class DummyPaintAction implements PaintAction
 	public boolean supportsCancel() { return false; }
 	public void cancelAction() { }
 	public void finishWithLastPoint() { }
+	public void resetState() { } 
 	public void draw(Canvas canvas,Paint paint) { }
 }
