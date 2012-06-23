@@ -17,9 +17,30 @@ public class PaintBoardView extends View
 	private Rect prevAffectedArea;
 	private PaintAction paintAction;
 	private Paint paint=new Paint();
+	private BoardBitmapInfo boardBitmapInfo=null;
 	private float lastPointX=-1,lastPointY=-1;
 	private int prevWidth=0,prevHeight=0;
-	private int pointerID=-1;
+	private int pointerID=-1,backgroundColor;
+	
+	private class BoardBitmapInfo implements BitmapInfo
+	{
+		public int getWidth() 
+		{ return (boardBitmap!=null?boardBitmap.getWidth():0); }
+		
+		public int getHeight() 
+		{ return (boardBitmap!=null?boardBitmap.getHeight():0); }
+		
+		public int getColor(int pointX,int pointY) 
+		{ 
+			if (boardBitmap!=null)
+			{
+				int color=boardBitmap.getPixel(pointX,pointY);
+				if (color==0) color=backgroundColor;
+				return color;
+			}
+			else return Color.WHITE;
+		}
+	}
 	
 	public PaintBoardView(Context context) 
 	{ 
@@ -38,6 +59,7 @@ public class PaintBoardView extends View
 		setBackgroundColor(Color.WHITE);
 		DENSITY_FACTOR=context.getResources().getDisplayMetrics().density;
 		SCROLLBAR_SIZE=ViewConfiguration.get(context).getScaledScrollBarSize();
+		boardBitmapInfo=new BoardBitmapInfo();
 	}
 	
 	@Override protected void finalize() throws Throwable
@@ -62,6 +84,14 @@ public class PaintBoardView extends View
 			throw new IllegalArgumentException("The paint to use for drawing " +
 					"must be non-null!");
 		this.paint=paint;
+	}
+	
+	public BitmapInfo getBoardBitmapInfo() { return boardBitmapInfo; }
+	
+	@Override public void setBackgroundColor(int color)
+	{
+		super.setBackgroundColor(color);
+		backgroundColor=color;
 	}
 	
 	@Override public int computeHorizontalScrollRange() 

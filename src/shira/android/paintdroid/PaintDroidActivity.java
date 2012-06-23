@@ -12,7 +12,9 @@ import android.widget.*;
 public class PaintDroidActivity extends Activity 
 {
 	private PaintBoardView paintBoardView;
+	private View currentColorView;
 	private Paint drawingPaint;
+	private GradientDrawable colorBackground;
 	
 	private class ScrollingAction extends DifferencePaintAction
 	{
@@ -72,16 +74,26 @@ public class PaintDroidActivity extends Activity
 		//paintBoardView.setDrawingCacheEnabled(true);
 		
 		//Paint actions grid
-		final PaintAction[] paintActions=new PaintAction[8];
-		paintActions[0]=new ScrollingAction(paintBoardView.computeHorizontalScrollRange(),
-				paintBoardView.computeVerticalScrollRange());
+		final PaintAction[] paintActions=new PaintAction[10];
 		DummyPaintAction dummyAction=DummyPaintAction.getInstance();
-		for (int counter=1;counter<paintActions.length;counter++)
+		for (int counter=0;counter<paintActions.length;counter++)
 			paintActions[counter]=dummyAction;
+		
 		paintActions[2]=new FreeFormPaintAction();
 		paintActions[3]=new EraserPaintAction(backgroundColor);
-		paintActions[5]=new PaintRectangleAction();
-		paintActions[6]=new PaintEllipseAction();
+		paintActions[7]=new PaintRectangleAction();
+		paintActions[8]=new PaintEllipseAction();
+		
+		int hScrollRange=paintBoardView.computeHorizontalScrollRange();
+		int vScrollRange=paintBoardView.computeVerticalScrollRange();
+		paintActions[0]=new ScrollingAction(hScrollRange,vScrollRange);
+		
+		BitmapInfo boardBitmapInfo=paintBoardView.getBoardBitmapInfo();
+		PickColorAction pickColorAction=new PickColorAction(boardBitmapInfo);
+		pickColorAction.setOnColorPickListener(new PickColorAction.OnColorPickListener() 
+		{ public void onColorPick(int color) { changeCurrentColor(color); } });
+		paintActions[4]=pickColorAction;
+		
 		GridView paintActionsGrid=(GridView)findViewById(R.id.paint_actions_grid);
 		PaintActionsAdapter actionsAdapter=new PaintActionsAdapter(this,
 				new OnListItemClickListener()
@@ -94,9 +106,8 @@ public class PaintDroidActivity extends Activity
 		paintBoardView.setPaintAction(paintActions[0]);
 		
 		//Paint colors views
-		final View currentColorView=findViewById(R.id.current_color_view);
-		final GradientDrawable colorBackground=(GradientDrawable)currentColorView.
-				getBackground();
+		currentColorView=findViewById(R.id.current_color_view);
+		colorBackground=(GradientDrawable)currentColorView.getBackground();
 		colorBackground.setColor(initialPaintColor);
 		GradientSelectorView colorSelectorView=(GradientSelectorView)
 				findViewById(R.id.color_selector_view);
@@ -106,11 +117,14 @@ public class PaintDroidActivity extends Activity
 		{	
 			//@Override public void onClick(View view)
 			@Override public void onColorSelect(int color)
-			{ 
-				colorBackground.setColor(color);
-				currentColorView.invalidate();
-				drawingPaint.setColor(color);
-			}
+			{ changeCurrentColor(color); }
 		});
+	}
+	
+	private void changeCurrentColor(int color)
+	{
+		colorBackground.setColor(color);
+		currentColorView.invalidate();
+		drawingPaint.setColor(color);
 	}
 }

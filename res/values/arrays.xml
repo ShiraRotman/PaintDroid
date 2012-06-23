@@ -5,6 +5,8 @@
         <item>@drawable/text</item>
         <item>@drawable/pencil</item>
         <item>@drawable/eraser</item>
+        <item>@drawable/color_picker</item>
+        <item>@drawable/ic_launcher</item>
         <item>@drawable/line</item>
         <item>@drawable/rectangle</item>
         <item>@drawable/ellipse</item>
