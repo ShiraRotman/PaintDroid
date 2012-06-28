@@ -11,7 +11,6 @@ import java.util.LinkedList;
 abstract class ImmediatePaintAction extends AbstractPaintAction
 {
 	protected LinkedList<Float> affectedPoints=new LinkedList<Float>();
-	protected boolean isFinalPoint=false;
 	
 	protected ImmediatePaintAction() { lastAffectedArea=new RectF(); }
 	
@@ -33,7 +32,7 @@ abstract class ImmediatePaintAction extends AbstractPaintAction
 		}
 		affectedPoints.add(pointX);
 		affectedPoints.add(pointY);
-		this.isFinalPoint=isFinalPoint;
+		super.actOnPoint(pointX,pointY,isFinalPoint);
 	}
 	
 	@Override public void resetState() 
@@ -41,7 +40,6 @@ abstract class ImmediatePaintAction extends AbstractPaintAction
 		super.resetState();
 		affectedPoints.clear();
 		lastAffectedArea=new RectF();
-		isFinalPoint=false;
 	}
 	
 	@Override public void finishWithLastPoint() { isFinalPoint=true; } 

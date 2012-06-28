@@ -172,7 +172,9 @@ public class PaintBoardView extends View
 			if (affectedArea!=null)
 			{
 				setDrawingCacheEnabled(false);
-				invalidate(affectedArea);
+				if ((affectedArea.width()==0)&&(affectedArea.height()==0))
+					invalidate();
+				else invalidate(affectedArea);
 			}
 			prevAffectedArea=affectedArea;
 			return true;

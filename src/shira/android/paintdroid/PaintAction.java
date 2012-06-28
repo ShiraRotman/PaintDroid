@@ -25,19 +25,23 @@ interface PaintAction
 abstract class AbstractPaintAction implements PaintAction
 {
 	protected RectF lastAffectedArea;
+	protected boolean isFinalPoint;
 	
 	protected AbstractPaintAction() { }
 	
-	public RectF getLastAffectedArea() 
-	{ 
+	public void actOnPoint(float pointX,float pointY,boolean isFinalPoint)
+	{ this.isFinalPoint=isFinalPoint; }
+	
+	public RectF getLastAffectedArea() { return lastAffectedArea; } 
+	/*{ 
 		if (lastAffectedArea!=null) return lastAffectedArea;
 		else return new RectF(0,0,0,0);
-	}
+	}*/
 	
 	public PointSensitivityLevel getPointsSensitivityLevel() 
 	{ return PointSensitivityLevel.CURRENT; }
 	
-	public void resetState() { lastAffectedArea=null; }
+	public void resetState() { lastAffectedArea=null; isFinalPoint=false; }
 	
 	public boolean supportsCancel() { return false; }
 	
@@ -51,17 +55,20 @@ abstract class AbstractPaintAction implements PaintAction
 abstract class DifferencePaintAction extends AbstractPaintAction
 {
 	protected float lastPointX=-1,lastPointY=-1;
-	protected boolean isFinalPoint;
 	
+	@Override 
 	public void actOnPoint(float pointX,float pointY,boolean isFinalPoint)
-	{ lastPointX=pointX; lastPointY=pointY; this.isFinalPoint=isFinalPoint; }
+	{ 
+		lastPointX=pointX; lastPointY=pointY;
+		super.actOnPoint(pointX,pointY,isFinalPoint);
+	}
 	
 	//public void finishWithLastPoint() { lastPointX=-1; lastPointY=-1; }
 	
 	@Override public void resetState() 
 	{
 		super.resetState();
-		lastPointX=-1; lastPointY=-1; isFinalPoint=false; 
+		lastPointX=-1; lastPointY=-1;
 	}
 }
 
