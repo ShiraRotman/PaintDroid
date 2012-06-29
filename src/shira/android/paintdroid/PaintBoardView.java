@@ -15,7 +15,7 @@ public class PaintBoardView extends View
 	
 	private Bitmap boardBitmap;
 	private Rect prevAffectedArea;
-	private PaintAction paintAction;
+	private PaintAction paintAction,tempAction;
 	private Paint paint=new Paint();
 	private BoardBitmapInfo boardBitmapInfo=null;
 	private float lastPointX=-1,lastPointY=-1;
@@ -72,8 +72,21 @@ public class PaintBoardView extends View
 	
 	public void setPaintAction(PaintAction paintAction)
 	{ 
+		if ((this.paintAction!=null)&&(this.paintAction.needsToFinishAction()))
+		{
+			tempAction=paintAction;
+			this.paintAction.finishAction();
+			invalidateBoard();
+		}
+		else setNewPaintAction(paintAction);
+	}
+	
+	private void setNewPaintAction(PaintAction paintAction)
+	{
 		this.paintAction=paintAction;
+		paintAction.resetState();
 		lastPointX=-1; lastPointY=-1;
+		prevAffectedArea=null;
 	}
 	
 	public Paint getPaint() { return paint; }
@@ -157,29 +170,34 @@ public class PaintBoardView extends View
 				if (paintAction.supportsCancel()) paintAction.cancelAction();
 				else paintAction.finishWithLastPoint();
 			}
-			Rect affectedArea=null;
-			RectF affectedAreaF=paintAction.getLastAffectedArea();
-			if (affectedAreaF!=null)
-			{
-				affectedArea=new Rect();
-				affectedAreaF.round(affectedArea);
-				if (paintAction.usesLocalPoints()) 
-					convertLocalGlobalRect(affectedArea,true);
-				if (prevAffectedArea!=null) affectedArea.union(prevAffectedArea);
-			}
-			else if (prevAffectedArea!=null) 
-				affectedArea=new Rect(prevAffectedArea);
-			if (affectedArea!=null)
-			{
-				setDrawingCacheEnabled(false);
-				if ((affectedArea.width()==0)&&(affectedArea.height()==0))
-					invalidate();
-				else invalidate(affectedArea);
-			}
-			prevAffectedArea=affectedArea;
+			invalidateBoard();
 			return true;
 		} //end if paintAction!=null
 		else return false;
+	}
+	
+	private void invalidateBoard()
+	{
+		Rect affectedArea=null;
+		RectF affectedAreaF=paintAction.getLastAffectedArea();
+		if (affectedAreaF!=null)
+		{
+			affectedArea=new Rect();
+			affectedAreaF.round(affectedArea);
+			if (paintAction.usesLocalPoints()) 
+				convertLocalGlobalRect(affectedArea,true);
+			if (prevAffectedArea!=null) affectedArea.union(prevAffectedArea);
+		}
+		else if (prevAffectedArea!=null) 
+			affectedArea=new Rect(prevAffectedArea);
+		if (affectedArea!=null)
+		{
+			setDrawingCacheEnabled(false);
+			if ((affectedArea.width()==0)&&(affectedArea.height()==0))
+				invalidate();
+			else invalidate(affectedArea);
+		}
+		prevAffectedArea=affectedArea;
 	}
 	
 	@Override protected void onDraw(Canvas canvas)
@@ -218,33 +236,41 @@ public class PaintBoardView extends View
 				Bitmap partialBitmap=getDrawingCache();
 				//.copy(Bitmap.Config.ARGB_8888,false);
 				RectF affectedAreaF=paintAction.getLastAffectedArea();
-				Rect localAffectedArea=new Rect();
-				affectedAreaF.round(localAffectedArea);
-				Rect globalAffectedArea=new Rect(localAffectedArea);
-				if (paintAction.usesLocalPoints())
-					convertLocalGlobalRect(globalAffectedArea,true);
-				else convertLocalGlobalRect(localAffectedArea,false);
-				//Log.i("PaintDroid","Local: " + localAffectedArea);
-				int areaWidth=localAffectedArea.width();
-				int areaHeight=localAffectedArea.height();
-				/*int areaWidth=partialBitmap.getWidth()-SCROLLBAR_SIZE;
-				int areaHeight=partialBitmap.getHeight()-SCROLLBAR_SIZE;*/
-				int[] pixels=new int[areaWidth*areaHeight];
-				partialBitmap.getPixels(pixels,0,areaWidth,localAffectedArea.
-						left,localAffectedArea.top,areaWidth,areaHeight);
-				/*partialBitmap.getPixels(pixels,0,areaWidth,0,0,areaWidth,
-						areaHeight);*/
-				/*int numColored=0;
-				for (int index=0;index<pixels.length;index++)
-					if (pixels[index]!=Color.WHITE) numColored++;
-				Log.i("PaintDroid","Pixels: " + numColored);*/
-				boardBitmap.setPixels(pixels,0,areaWidth,globalAffectedArea.
-						left,globalAffectedArea.top,areaWidth,areaHeight);
+				if (affectedAreaF!=null)
+				{
+					Rect localAffectedArea=new Rect();
+					affectedAreaF.round(localAffectedArea);
+					Rect globalAffectedArea=new Rect(localAffectedArea);
+					if (paintAction.usesLocalPoints())
+						convertLocalGlobalRect(globalAffectedArea,true);
+					else convertLocalGlobalRect(localAffectedArea,false);
+					//Log.i("PaintDroid","Local: " + localAffectedArea);
+					int areaWidth=localAffectedArea.width();
+					int areaHeight=localAffectedArea.height();
+					/*int areaWidth=partialBitmap.getWidth()-SCROLLBAR_SIZE;
+					int areaHeight=partialBitmap.getHeight()-SCROLLBAR_SIZE;*/
+					int[] pixels=new int[areaWidth*areaHeight];
+					partialBitmap.getPixels(pixels,0,areaWidth,localAffectedArea.
+							left,localAffectedArea.top,areaWidth,areaHeight);
+					/*partialBitmap.getPixels(pixels,0,areaWidth,0,0,areaWidth,
+							areaHeight);*/
+					/*int numColored=0;
+					for (int index=0;index<pixels.length;index++)
+						if (pixels[index]!=Color.WHITE) numColored++;
+					Log.i("PaintDroid","Pixels: " + numColored);*/
+					boardBitmap.setPixels(pixels,0,areaWidth,globalAffectedArea.
+							left,globalAffectedArea.top,areaWidth,areaHeight);
+				} //end if (affectedAreaF!=null)
 				prevAffectedArea=null;
 				//partialBitmap.recycle();
 				//setDrawingCacheEnabled(false);
 			}
 			//setDrawingCacheEnabled(false);
+			if (tempAction!=null)
+			{
+				setNewPaintAction(tempAction);
+				tempAction=null;
+			}
 		} //end if paintAction!=null
 	}
 	

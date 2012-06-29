@@ -89,6 +89,8 @@ public class PaintDroidActivity extends Activity
 		int hScrollRange=paintBoardView.computeHorizontalScrollRange();
 		int vScrollRange=paintBoardView.computeVerticalScrollRange();
 		paintActions[0]=new ScrollingAction(hScrollRange,vScrollRange);
+		float density=getResources().getDisplayMetrics().density;
+		paintActions[9]=new PaintPolygonAction(density);
 		
 		BitmapInfo boardBitmapInfo=paintBoardView.getBoardBitmapInfo();
 		PickColorAction pickColorAction=new PickColorAction(boardBitmapInfo);
@@ -103,7 +105,6 @@ public class PaintDroidActivity extends Activity
 			public void onListItemClick(View view,int position)
 			{
 				PaintAction paintAction=paintActions[position];
-				paintAction.resetState();
 				paintBoardView.setPaintAction(paintAction); 
 			}
 		});

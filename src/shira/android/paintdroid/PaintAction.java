@@ -19,6 +19,8 @@ interface PaintAction
 	public abstract void cancelAction();
 	public abstract void finishWithLastPoint();
 	public abstract void resetState();
+	public abstract boolean needsToFinishAction();
+	public abstract void finishAction();
 	public abstract void draw(Canvas canvas,Paint paint);
 }
 
@@ -42,6 +44,8 @@ abstract class AbstractPaintAction implements PaintAction
 	{ return PointSensitivityLevel.CURRENT; }
 	
 	public void resetState() { lastAffectedArea=null; isFinalPoint=false; }
+	public boolean needsToFinishAction() { return false; }
+	public void finishAction() { }
 	
 	public boolean supportsCancel() { return false; }
 	
@@ -93,5 +97,7 @@ class DummyPaintAction implements PaintAction
 	public void cancelAction() { }
 	public void finishWithLastPoint() { }
 	public void resetState() { } 
+	public boolean needsToFinishAction() { return false; }
+	public void finishAction() { }
 	public void draw(Canvas canvas,Paint paint) { }
 }
