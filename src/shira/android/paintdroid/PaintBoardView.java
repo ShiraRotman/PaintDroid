@@ -107,6 +107,16 @@ public class PaintBoardView extends View
 		backgroundColor=color;
 	}
 	
+	public void clearBoard()
+	{
+		if (boardBitmap!=null)
+		{
+			boardBitmap.eraseColor(backgroundColor);
+			if (paintAction!=null) paintAction.resetState();
+			invalidate();
+		}
+	}
+	
 	@Override public int computeHorizontalScrollRange() 
 	{ return (int)(500*DENSITY_FACTOR); }
 	

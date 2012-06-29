@@ -5,7 +5,7 @@ import android.graphics.*;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
+import android.view.*;
 //import android.view.ViewGroup;
 import android.widget.*;
 
@@ -133,5 +133,23 @@ public class PaintDroidActivity extends Activity
 		colorBackground.setColor(color);
 		currentColorView.invalidate();
 		drawingPaint.setColor(color);
+	}
+	
+	@Override public boolean onCreateOptionsMenu(Menu menu)
+	{
+		MenuInflater inflater=getMenuInflater();
+		inflater.inflate(R.menu.options_menu,menu);
+		return true;
+	}
+	
+	@Override public boolean onOptionsItemSelected(MenuItem item)
+	{
+		switch (item.getItemId())
+		{
+			case R.id.new_image_option:
+				paintBoardView.clearBoard();
+				return true;
+			default: return super.onOptionsItemSelected(item);
+		}
 	}
 }
