@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:paintdroid="http://schemas.android.com/apk/res/shira.android.paintdroid"
+    android:layout_width="fill_parent" android:layout_height="fill_parent" android:padding="10dip"
+    android:background="@color/ui_background_color">
+    
+    <View android:id="@+id/selected_color_view" android:layout_width="60dip" 
+        android:layout_height="90dip" android:layout_alignParentLeft="true"/>
+    
+    <shira.android.paintdroid.GradientSlider android:id="@+id/red_component_slider"
+		android:layout_width="110dip" android:layout_height="40dip"
+		android:layout_toRightOf="@id/selected_color_view" android:layout_alignParentTop="true"
+		paintdroid:value="0" paintdroid:minimum="0" paintdroid:maximum="255" 
+		paintdroid:step="1" android:layout_marginLeft="10dip"/>
+   	<shira.android.paintdroid.GradientSlider android:id="@+id/green_component_slider"
+		android:layout_width="110dip" android:layout_height="40dip" android:layout_marginTop="10dip"
+		android:layout_toRightOf="@id/selected_color_view" android:layout_marginLeft="10dip"
+		paintdroid:value="0" paintdroid:minimum="0" paintdroid:maximum="255" 
+		paintdroid:step="1" android:layout_below="@id/red_component_slider"/> 
+   	<shira.android.paintdroid.GradientSlider android:id="@+id/blue_component_slider"
+		android:layout_width="110dip" android:layout_height="40dip" android:layout_marginTop="10dip"
+		android:layout_toRightOf="@id/selected_color_view" android:layout_marginLeft="10dip"
+		paintdroid:value="0" paintdroid:minimum="0" paintdroid:maximum="255" 
+		paintdroid:step="1" android:layout_below="@id/green_component_slider"/> 
+		
+   	<EditText android:id="@+id/red_component_edit" android:inputType="number" 
+  		android:layout_width="70dip" android:layout_height="40dip" 	    
+   	   	android:layout_toRightOf="@id/red_component_slider" android:layout_marginLeft="3dip"
+   	   	android:layout_alignTop="@id/red_component_slider" android:gravity="center"/>
+   	<EditText android:id="@+id/green_component_edit" android:inputType="number" 
+  		android:layout_width="70dip" android:layout_height="40dip" android:gravity="center"
+   	   	android:layout_toRightOf="@id/green_component_slider" android:layout_marginLeft="3dip"
+   	   	android:layout_alignTop="@id/green_component_slider"/>
+   	<EditText android:id="@+id/blue_component_edit" android:inputType="number" 
+  		android:layout_width="70dip" android:layout_height="40dip" android:gravity="center"
+   	   	android:layout_toRightOf="@id/blue_component_slider" android:layout_marginLeft="3dip"
+   	   	android:layout_alignTop="@id/blue_component_slider"/>
+   	
+   	<TextView android:id="@+id/color_hex_value_title" android:layout_width="wrap_content" 
+   	    android:layout_height="40dip" android:text="@string/color_hex_value_title" 
+   	    android:layout_alignLeft="@id/blue_component_slider" android:layout_marginLeft="10dip"
+   	    android:layout_below="@id/blue_component_slider" android:layout_marginTop="10dip"
+   	    android:textColor="@android:color/black" android:gravity="center_vertical"/>
+   	<EditText android:id="@+id/color_hex_value" android:layout_width="100dip" 
+   	    android:layout_height="40dip" android:inputType="textCapCharacters" android:gravity="center"
+   	    android:layout_toRightOf="@id/color_hex_value_title" android:layout_marginLeft="10dip"
+   	    android:layout_below="@id/blue_component_slider" android:layout_marginTop="10dip"/>
+   	
+   	<Button android:id="@+id/ok_button" android:layout_width="100dip" 
+   	    android:text="@android:string/ok" android:layout_height="wrap_content" 
+   	    android:layout_alignRight="@id/color_hex_value_title" android:layout_marginTop="20dip"
+   	    android:layout_below="@id/color_hex_value"/>
+  	<Button android:id="@+id/cancel_button" android:layout_width="100dip" 
+  	    android:layout_height="wrap_content" android:layout_alignLeft="@id/color_hex_value"
+  	    android:layout_below="@id/color_hex_value" android:layout_marginTop="20dip"
+  	    android:text="@android:string/cancel"/> 	
+</RelativeLayout>

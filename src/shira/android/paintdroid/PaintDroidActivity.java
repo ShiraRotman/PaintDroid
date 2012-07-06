@@ -1,6 +1,7 @@
 package shira.android.paintdroid;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.*;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -11,6 +12,8 @@ import android.widget.*;
 
 public class PaintDroidActivity extends Activity 
 {
+	private static final int COLOR_SELECTION_REQUEST_CODE=1;
+	
 	private PaintBoardView paintBoardView;
 	private View currentColorView;
 	private Paint drawingPaint;
@@ -149,7 +152,26 @@ public class PaintDroidActivity extends Activity
 			case R.id.new_image_option:
 				paintBoardView.clearBoard();
 				return true;
+			case R.id.colors_option:
+				Intent intent=new Intent(this,ColorSelectionActivity.class);
+				startActivityForResult(intent,COLOR_SELECTION_REQUEST_CODE);
+				return true;
 			default: return super.onOptionsItemSelected(item);
 		}
+	}
+	
+	@Override 
+	protected void onActivityResult(int requestCode,int resultCode,Intent data)
+	{
+		if (requestCode==COLOR_SELECTION_REQUEST_CODE)
+		{
+			if (resultCode==RESULT_OK)
+			{
+				int selectedColor=data.getIntExtra(ColorSelectionActivity.
+						SELECTED_COLOR_KEY_NAME,Color.BLACK);
+				changeCurrentColor(selectedColor);
+			}
+		}
+		else super.onActivityResult(requestCode,resultCode,data);
 	}
 }

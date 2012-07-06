@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="value" format="float"/>
+    <attr name="minimum" format="float"/>
+    <attr name="maximum" format="float"/>
+    <attr name="step" format="float"/>
+    <declare-styleable name="GradientSlider">
+        <attr name="value"/>
+        <attr name="minimum"/>
+        <attr name="maximum"/>
+        <attr name="step"/>
+        <attr name="minColor" format="color|reference"/>
+        <attr name="maxColor" format="color|reference"/>
+    </declare-styleable>
+</resources>

@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">PaintDroid</string>
+    <string name="color_hex_value_title">Hex value:</string>
+    
 	<string name="new_image_title">New</string>
+	<string name="colors_title">Colors</string>
 </resources>
