@@ -2,11 +2,15 @@ package shira.android.paintdroid;
 
 import android.content.Context;
 import android.graphics.*;
+import android.text.Editable;
+import android.text.InputType;
+import android.text.TextWatcher;
+//import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewConfiguration;
+import android.view.*;
+import android.view.inputmethod.*;
+import android.widget.EditText;
 
 public class PaintBoardView extends View 
 {
@@ -18,9 +22,12 @@ public class PaintBoardView extends View
 	private PaintAction paintAction,tempAction;
 	private Paint paint=new Paint();
 	private BoardBitmapInfo boardBitmapInfo=null;
+	private BoardTextInputController textInputController;
+	private EditText softKeysReceiver;
 	private float lastPointX=-1,lastPointY=-1;
 	private int prevWidth=0,prevHeight=0;
 	private int pointerID=-1,backgroundColor;
+	private boolean isInTextInputMode=false;
 	
 	private class BoardBitmapInfo implements BitmapInfo
 	{
@@ -42,6 +49,28 @@ public class PaintBoardView extends View
 		}
 	}
 	
+	private class BoardTextInputController implements TextInputController
+	{
+		public boolean isInTextInputMode() { return isInTextInputMode; }
+		
+		public void setTextInputMode(boolean isInTextInputMode)
+		{
+			PaintBoardView.this.isInTextInputMode=isInTextInputMode;
+			if (!isInTextInputMode)
+			{
+				InputMethodManager inputManager=(InputMethodManager)getContext().
+						getSystemService(Context.INPUT_METHOD_SERVICE);
+				inputManager.hideSoftInputFromWindow(getWindowToken(),0);
+			}
+		}
+		
+		public String getTextInput() 
+		{ return softKeysReceiver.getText().toString(); }
+		
+		public void setTextInput(String textInput) 
+		{ softKeysReceiver.setText(textInput); }
+	}
+	
 	public PaintBoardView(Context context) 
 	{ 
 		super(context);
@@ -60,6 +89,20 @@ public class PaintBoardView extends View
 		DENSITY_FACTOR=context.getResources().getDisplayMetrics().density;
 		SCROLLBAR_SIZE=ViewConfiguration.get(context).getScaledScrollBarSize();
 		boardBitmapInfo=new BoardBitmapInfo();
+		textInputController=new BoardTextInputController();
+		softKeysReceiver=new EditText(context);
+		//softKeysReceiver.setVisibility(View.INVISIBLE);
+		softKeysReceiver.addTextChangedListener(new TextWatcher() 
+		{
+			public void beforeTextChanged(CharSequence s,int start,int count,
+					int after) { }
+			
+			public void onTextChanged(CharSequence s,int start,int before,
+					int count) { } 
+			
+			public void afterTextChanged(Editable s) 
+			{ PaintBoardView.this.invalidate(); } //TODO: Optimize
+		});
 	}
 	
 	@Override protected void finalize() throws Throwable
@@ -100,6 +143,8 @@ public class PaintBoardView extends View
 	}
 	
 	public BitmapInfo getBoardBitmapInfo() { return boardBitmapInfo; }
+	public TextInputController getTextInputController() 
+	{ return textInputController; }
 	
 	@Override public void setBackgroundColor(int color)
 	{
@@ -123,8 +168,43 @@ public class PaintBoardView extends View
 	@Override public int computeVerticalScrollRange() 
 	{ return (int)(800*DENSITY_FACTOR); }
 	
+	@Override public boolean onCheckIsTextEditor() { return isInTextInputMode; }
+	
+	@Override public InputConnection onCreateInputConnection(EditorInfo outAttrs)
+	{
+		if (isInTextInputMode)
+		{
+			outAttrs.inputType=InputType.TYPE_CLASS_TEXT;
+			return new BaseInputConnection(this,true)
+			{	
+				@Override public Editable getEditable() 
+				{ return softKeysReceiver.getText(); }
+			};
+		}
+		else return null;
+	}
+	
+	/*@Override public boolean onKeyPreIme(int keyCode,KeyEvent event)
+	{
+		char pressedKey=event.getDisplayLabel();
+		if (pressedKey!=0)
+		{
+			inputText.append(pressedKey);
+			invalidate();
+			return true;
+		}
+		else return false;
+	}*/
+	
 	@Override public boolean onTouchEvent(MotionEvent event)
 	{
+		InputMethodManager inputManager=null;
+		if (isInTextInputMode)
+		{
+			requestFocus();
+			inputManager=(InputMethodManager)getContext().getSystemService(
+					Context.INPUT_METHOD_SERVICE);
+		}
 		if (paintAction!=null)
 		{
 			int actionMask=event.getAction() & MotionEvent.ACTION_MASK;
@@ -135,6 +215,10 @@ public class PaintBoardView extends View
 				{
 					pointerID=event.getPointerId(0);
 					pointerIndex=0;
+					//inputManager.toggleSoftInputFromWindow(getWindowToken(),0,0);
+					//inputManager.showSoftInput(this,0,new ShowInputResultReceiver());
+					if (isInTextInputMode)
+						inputManager.hideSoftInputFromWindow(getWindowToken(),0);
 				}
 				else pointerIndex=event.findPointerIndex(pointerID);
 				if (pointerIndex>-1)
@@ -173,6 +257,7 @@ public class PaintBoardView extends View
 				{
 					if (pointerIndex==-1) paintAction.finishWithLastPoint();
 					pointerID=-1;
+					if (isInTextInputMode) inputManager.showSoftInput(this,0);
 				}
 			} //end if (actionMask...
 			else
@@ -236,6 +321,8 @@ public class PaintBoardView extends View
 		boardDrawingRect.right-=SCROLLBAR_SIZE; 
 		boardDrawingRect.bottom-=SCROLLBAR_SIZE;
 		canvas.drawBitmap(boardBitmap,boardDrawingRect,boardDrawingRect,null);
+		/*paint.setTextSize(16);
+		canvas.drawText(inputText.toString(),boardDrawingRect.right-20,20,paint);*/
 		if (paintAction!=null)
 		{
 			//setDrawingCacheEnabled(true);
@@ -251,9 +338,20 @@ public class PaintBoardView extends View
 					Rect localAffectedArea=new Rect();
 					affectedAreaF.round(localAffectedArea);
 					Rect globalAffectedArea=new Rect(localAffectedArea);
-					if (paintAction.usesLocalPoints())
+					if ((localAffectedArea.width()==0)&&(localAffectedArea.
+							height()==0))
+					{
+						localAffectedArea.left=0; localAffectedArea.top=0;
+						localAffectedArea.right=partialBitmap.getWidth();
+						localAffectedArea.bottom=partialBitmap.getHeight();
 						convertLocalGlobalRect(globalAffectedArea,true);
-					else convertLocalGlobalRect(localAffectedArea,false);
+					}
+					else
+					{
+						if (paintAction.usesLocalPoints())
+							convertLocalGlobalRect(globalAffectedArea,true);
+						else convertLocalGlobalRect(localAffectedArea,false);
+					}
 					//Log.i("PaintDroid","Local: " + localAffectedArea);
 					int areaWidth=localAffectedArea.width();
 					int areaHeight=localAffectedArea.height();

@@ -14,7 +14,8 @@
     	<!-- Paint Board View -->
     	<view class="shira.android.paintdroid.PaintBoardView" android:id="@+id/paint_board_view"
     	    android:layout_width="0dip" android:layout_height="fill_parent" 
-    	    android:layout_weight="0.8" android:scrollbars="horizontal|vertical"/>
+    	    android:layout_weight="0.8" android:scrollbars="horizontal|vertical"
+    	    android:focusable="true" android:focusableInTouchMode="true"/>
     </LinearLayout>
     <LinearLayout android:layout_width="fill_parent" android:layout_height="0dip" 
         android:layout_weight="0.1" android:orientation="horizontal" android:paddingTop="3dip" 

@@ -83,6 +83,7 @@ public class PaintDroidActivity extends Activity
 		for (int counter=0;counter<paintActions.length;counter++)
 			paintActions[counter]=dummyAction;
 		
+		paintActions[1]=new PaintTextAction(paintBoardView.getTextInputController());
 		paintActions[2]=new FreeFormPaintAction();
 		paintActions[3]=new EraserPaintAction(backgroundColor);
 		paintActions[6]=new PaintLineAction();
